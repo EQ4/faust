@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8E6CA302-A8BA-4B91-BD26-E454E7885EBD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>faustgen</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1655160F2BDCC8C63A6CE2021A1D27C68D5CD361</key>
+		<string>git://git.code.sf.net/p/faudiostream/code</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>embedded/faustgen/faustgen.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1655160F2BDCC8C63A6CE2021A1D27C68D5CD361</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>git://git.code.sf.net/p/faudiostream/code</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1655160F2BDCC8C63A6CE2021A1D27C68D5CD361</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1655160F2BDCC8C63A6CE2021A1D27C68D5CD361</string>
+			<key>IDESourceControlWCCName</key>
+			<string>faust</string>
+		</dict>
+	</array>
+</dict>
+</plist>
