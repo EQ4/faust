@@ -287,7 +287,7 @@
     </style>
 
 </head>
-<body bgcolor= black> >
+<body bgcolor= "#000000">
 <div id="filedrag">
     Embedded Faust compiler : drop your .dsp file here
 </div>
@@ -301,7 +301,7 @@
 <script src="webaudio-asm-wrapper.js"></script>
 <script src="WebMIDIAPI.js"></script>
         
-<script type=text/javascript>
+<script type="text/javascript">
 
 (function() {
 
@@ -427,7 +427,7 @@
         audio_input = audio_context.createMediaStreamSource(device);
         
         // Connect it to the destination.
-        audio_input.connect(DSP.scriptProcessor);
+        audio_input.connect(DSP.getProcessor());
     }
 
     function FileDragHover(e) {
@@ -482,8 +482,9 @@
                     }
                 } 
                 
-                // Create a DSP factory from the dsp code                        
-                factory = faust.createDSPFactory(dsp_code);
+                // Create a DSP factory from the dsp code    
+                var args = ["-I", "http://faust.grame.fr/faustcode/"];                   
+                factory = faust.createDSPFactory(dsp_code, args);
                 if (!factory) {
                     alert(faust.getErrorMessage());
                     return;

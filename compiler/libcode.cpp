@@ -68,6 +68,7 @@
 #include "garbageable.hh"
 #include "exception.hh"
 #include "libfaust.h"
+#include "Text.hh"
 
 #define FAUSTVERSION        "2.0.a33"
 #define COMPILATION_OPTIONS "declare compilation_options    "
@@ -589,9 +590,13 @@ static bool process_cmdline(int argc, const char* argv[])
          
         } else if (isCmd(argv[i], "-I", "--import-dir")) {
             char temp[PATH_MAX+1];
-            char* path = realpath(argv[i+1], temp);
-            if (path) {
-                gGlobal->gImportDirList.push_back(path);
+            if (strstr(argv[i+1], "http://") != 0) {
+                gGlobal->gImportDirList.push_back(argv[i+1]);
+            } else {
+                char* path = realpath(argv[i+1], temp);
+                if (path) {
+                    gGlobal->gImportDirList.push_back(path);
+                }
             }
             i += 2;
             
@@ -743,7 +748,20 @@ static void printhelp()
 	cout << "faust -a jack-gtk.cpp -o myfx.cpp myfx.dsp\n";
 }
 
-static void printheader(ostream& dst)
+static void printDeclareHeader(ostream& dst)
+{
+    for (MetaDataSet::iterator i = gGlobal->gMetaDataSet.begin(); i != gGlobal->gMetaDataSet.end(); i++) {
+        dst << "declare ";
+        stringstream name; name << *(i->first);
+        dst << replaceChar(replaceChar(name.str(), '.', '_'), '/', '_');
+        for (set<Tree>::iterator j = i->second.begin(); j != i->second.end(); ++j) {
+            dst << " " << **j;
+        }
+        dst << ";" << endl;
+    }
+}
+
+static void printHeader(ostream& dst)
 {
     // defines the metadata we want to print as comments at the begin of in the file
     set<Tree> selectedKeys;
@@ -1014,7 +1032,7 @@ static pair<InstructionsCompiler*, CodeContainer*> generateCode(Tree signals, in
         if (gGlobal->gVectorSwitch) {
             comp = new DAGInstructionsCompiler(container);
         } else {
-            comp = new InstructionsCompiler(container);
+            comp = new InstructionsCompiler(container, (gGlobal->gOutputLang != "ajs"));
         }
 
         if (gGlobal->gPrintXMLSwitch) comp->setDescription(new Description());
@@ -1055,7 +1073,7 @@ static pair<InstructionsCompiler*, CodeContainer*> generateCode(Tree signals, in
                 }
        
                 if (gGlobal->gOutputLang != "js") {
-                    printheader(*dst);
+                    printHeader(*dst);
                 }
                 
                 if ((gGlobal->gOutputLang == "c") || (gGlobal->gOutputLang == "cpp")) {
@@ -1108,7 +1126,7 @@ static pair<InstructionsCompiler*, CodeContainer*> generateCode(Tree signals, in
             
         } else {
             if (gGlobal->gOutputLang != "js") {
-                printheader(*dst);
+                printHeader(*dst);
             }
             if ((gGlobal->gOutputLang != "java") && (gGlobal->gOutputLang != "js") && (gGlobal->gOutputLang != "ajs")) {
                 printfloatdef(*dst, (gGlobal->gFloatSize == 3));
@@ -1199,6 +1217,7 @@ static string expand_dsp_internal(int argc, const char* argv[], const char* name
     }
     stringstream out;
     out << COMPILATION_OPTIONS << reorganize_compilation_options(argc, argv) << ';' << endl;
+    printDeclareHeader(out);
     out << "process = " << boxpp(gGlobal->gProcessTree) << ';' << endl;
     return out.str();
 }
@@ -1267,6 +1286,7 @@ void compile_faust_internal(int argc, const char* argv[], const char* name, cons
     if (gGlobal->gExportDSP) {
         ofstream out(subst("$0_exp.dsp", makeDrawPathNoExt()).c_str());
         out << COMPILATION_OPTIONS << reorganize_compilation_options(argc, argv) << ';' << endl;
+        printDeclareHeader(out);
         out << "process = " << boxpp(process) << ';' << endl;
         return;
     }
